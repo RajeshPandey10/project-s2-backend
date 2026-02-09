@@ -2,6 +2,7 @@ import { sendError } from "../utils/responseHandler.js";
 import { validateEmail, validatePassword, validateRequiredFields } from "../utils/validation.js";
 import User from "../models/user.model.js";
 import { findOne } from "../utils/crudOperations.js";
+import { generateToken } from "../utils/jwtUtils.js";
 
 
 export const register = async(req,res)=>{
@@ -39,9 +40,13 @@ export const register = async(req,res)=>{
     username,email,password
   })
   const user = await newUser.save()
+
+  const token = generateToken(user._id)
   res.status(201).json({
-    sucess:true,
-    data:user
+    _id:user._id,
+    username:user.username,
+    email:user.email,
+    token
   })
 
    
@@ -52,4 +57,43 @@ export const register = async(req,res)=>{
     sendError(res,500,"server error")
   }
 
+}
+
+
+export const login = async(req,res)=>{
+const {email,password}= req.body;
+try {
+
+    const {isValid} = validateRequiredFields(req.body,[
+        "email",
+        "password"
+    ]);
+    
+    if(!isValid){
+       return sendError(res,400,"Please fill all fields")
+       
+    }
+ 
+    const user = await findOne(User,{email})
+
+    if(!user || !(await user.comparePassword(password))){
+        return sendError(res,401,"invalid credentials");
+
+    }
+
+  const token = generateToken(user._id)
+
+   res.status(200).json({
+    _id:user._id,
+    username:user.username,
+    email:user.email,
+    token
+   })
+
+   
+
+  } catch (error) {
+    console.log("Login error:",error)
+    sendError(res,500,"server error")
+  }
 }
