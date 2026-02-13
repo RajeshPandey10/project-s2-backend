@@ -1,6 +1,7 @@
 import express from "express"
 import dotenv from "dotenv"
 import authRoutes from "./routes/auth.route.js"
+import recipeRoutes from "./routes/recipe.route.js"
 import db from "./config/db.js"
 dotenv.config()
 console.log(db.state)
@@ -15,6 +16,7 @@ res.json({message:"your service is running live"})
 
 //Routes
 app.use("/api/auth",authRoutes)
+app.use("/api/recipe",recipeRoutes)
 
 
 

@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 //generate token
 
 export const generateToken =(id,expiresIn="30d")=>{
-    return jwt.sign({id},process.env.JWT_SECRET,{expiresIn});
+    return jwt.sign({id},process.env.JWT_SECRET,{expiresIn:expiresIn});
 }
 
 //verify
