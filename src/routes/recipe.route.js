@@ -1,13 +1,12 @@
 import express from "express";
 import { protect } from "../middleware/auth.middleware.js";
+import { createRecipe } from "../controllers/recipe.controller.js";
 
 
 const router=express.Router()
 
 
-router.post("/",protect,(req,res)=>{
-    res.send("recepie created")
-})
+router.post("/",protect,createRecipe)
 
 
 
