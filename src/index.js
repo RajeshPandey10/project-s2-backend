@@ -8,6 +8,7 @@ console.log(db.state)
 const app = express()
 const port =process.env.PORT
 app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 
 app.get("/api/health",(req,res)=>{
 res.json({message:"your service is running live"})
